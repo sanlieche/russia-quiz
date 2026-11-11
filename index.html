@@ -1,0 +1,2378 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>РОССИЯ В ДВИЖЕНИИ — 100 Слайдов (Brand in Motion System)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root {
+      --sky-blue: #0770E3;
+      --sky-blue-dark: #044894;
+      --pure-white: #FFFFFF;
+      --off-white: #F3F5F8;
+      --carbon-black: #0B0C10;
+      --coral-red: #FF3B30;
+      --emerald-green: #10B981;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* Dynamic Theme Variables (Updated per slide/state) */
+      --bg-main: #0770E3;
+      --bg-secondary: #0B0C10;
+      --bg-card: #FFFFFF;
+      --text-main: #FFFFFF;
+      --text-secondary: #FFFFFF;
+      --text-card: #0B0C10;
+      --accent: #FF3B30;
+      --grid-line: rgba(255, 255, 255, 0.14);
+      --grid-dot: rgba(255, 255, 255, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: background-color 0.75s var(--ease-out-expo), color 0.75s var(--ease-out-expo);
+    }
+
+    /* ==========================================================
+       1. MOTION TECHNICAL GRID & NODE DOTS
+       ========================================================== */
+    .motion-grid-layer {
+      position: fixed;
+      inset: -10vw;
+      z-index: 1;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      will-change: transform;
+    }
+
+    .grid-cell {
+      position: relative;
+      border-right: 1px solid var(--grid-line);
+      border-bottom: 1px solid var(--grid-line);
+      transition: border-color 0.6s ease;
+    }
+
+    .grid-cell::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      bottom: -3px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--grid-dot);
+      transition: background-color 0.6s ease, transform 0.6s var(--ease-out-expo);
+    }
+
+    /* ==========================================================
+       2. TOP TECHNICAL & BRAND HEADER
+       ========================================================== */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      border-bottom: 1px solid var(--grid-line);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--text-main);
+      color: var(--bg-main);
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      transition: all 0.6s var(--ease-out-expo);
+    }
+
+    .brand-logo-pill span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral-red);
+      display: inline-block;
+    }
+
+    .spec-telemetry {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .spec-telemetry strong {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 15px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .top-right-status {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .timing-readout {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.02em;
+      padding: 6px 14px;
+      border: 1px solid var(--grid-line);
+      border-radius: 6px;
+    }
+
+    .mode-pill {
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--coral-red);
+      color: #FFFFFF;
+      transition: transform 0.5s var(--ease-out-expo), background-color 0.5s ease;
+    }
+
+    body[data-state="answer"] .mode-pill {
+      background: var(--pure-white);
+      color: var(--carbon-black);
+    }
+
+    /* ==========================================================
+       3. SHIFT & PUSH MAIN VIEWPORT STAGE
+       ========================================================== */
+    .stage-viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      padding: 68px 0 76px 0;
+      z-index: 10;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* LEFT / PRIMARY QUESTION PANEL (Shifts & Compresses on Answer) */
+    .panel-question {
+      position: relative;
+      width: 60%;
+      height: 100%;
+      padding: 32px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid var(--grid-line);
+      will-change: width, transform, background-color;
+      z-index: 12;
+      overflow: hidden;
+    }
+
+    body[data-state="answer"] .panel-question {
+      padding: 24px 30px;
+    }
+
+    /* Giant Watermark Spec Number */
+    .giant-index-watermark {
+      position: absolute;
+      right: -18px;
+      bottom: -36px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: clamp(160px, 21vw, 310px);
+      line-height: 0.8;
+      letter-spacing: -0.06em;
+      opacity: 0.08;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .q-header-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 2;
+    }
+
+    .rubric-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 15px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid var(--grid-line);
+    }
+
+    .q-number-spec {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 20px;
+      opacity: 0.9;
+    }
+
+    .q-center-wrap {
+      position: relative;
+      z-index: 2;
+      margin: auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mask-overflow {
+      overflow: hidden;
+    }
+
+    .q-kicker-serif {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: clamp(17px, 1.6vw, 24px);
+      margin-bottom: 6px;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    body[data-state="answer"] .q-kicker-serif {
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    /* Display Typography */
+    .q-display-text {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(22px, 2.55vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      word-break: break-word;
+      transform-origin: left top;
+      transition: font-size 0.55s var(--ease-out-expo), line-height 0.55s var(--ease-out-expo);
+    }
+
+    body[data-state="answer"] .q-display-text {
+      font-size: clamp(16px, 1.35vw, 21px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      opacity: 0.95;
+    }
+
+    /* ==========================================================
+       4 INTERACTIVE ANSWER OPTIONS (А, Б, В, Г)
+       ========================================================== */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+      z-index: 3;
+      transition: all 0.55s var(--ease-out-expo);
+    }
+
+    body[data-state="answer"] .options-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .option-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255, 255, 255, 0.24);
+      background: rgba(11, 12, 16, 0.28);
+      backdrop-filter: blur(8px);
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    body[data-state="answer"] .option-btn {
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: default;
+    }
+
+    body[data-state="question"] .option-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.65);
+      transform: translateY(-2px);
+    }
+
+    .option-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.16);
+      color: #FFFFFF;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    body[data-state="answer"] .option-letter {
+      width: 26px;
+      height: 26px;
+      font-size: 11px;
+      border-radius: 8px;
+    }
+
+    .option-text {
+      font-size: clamp(12.5px, 0.98vw, 15px);
+      font-weight: 600;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    body[data-state="answer"] .option-text {
+      font-size: clamp(11.5px, 0.85vw, 13.5px);
+    }
+
+    .option-status-tag {
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      display: none;
+    }
+
+    /* User Selected Option on Question Slide */
+    .option-btn.is-selected {
+      background: #FFFFFF;
+      color: var(--carbon-black);
+      border-color: #FFFFFF;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+      transform: scale(1.015);
+    }
+
+    .option-btn.is-selected .option-letter {
+      background: var(--carbon-black);
+      color: #FFFFFF;
+    }
+
+    .option-btn.is-selected .option-status-tag {
+      display: inline-block;
+      background: var(--sky-blue);
+      color: #FFFFFF;
+    }
+
+    /* Revealed Answer States on Answer Slide */
+    body[data-state="answer"] .option-btn.is-correct {
+      background: var(--emerald-green);
+      color: #FFFFFF;
+      border-color: #34D399;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+      opacity: 1;
+    }
+
+    body[data-state="answer"] .option-btn.is-correct .option-letter {
+      background: rgba(255, 255, 255, 0.25);
+      color: #FFFFFF;
+    }
+
+    body[data-state="answer"] .option-btn.is-correct .option-status-tag {
+      display: inline-block;
+      background: rgba(11, 12, 16, 0.35);
+      color: #FFFFFF;
+    }
+
+    body[data-state="answer"] .option-btn.is-wrong-selected {
+      background: rgba(255, 59, 48, 0.28);
+      color: #FFFFFF;
+      border-color: var(--coral-red);
+      opacity: 0.9;
+    }
+
+    body[data-state="answer"] .option-btn.is-wrong-selected .option-letter {
+      background: var(--coral-red);
+      color: #FFFFFF;
+    }
+
+    body[data-state="answer"] .option-btn.is-wrong-selected .option-status-tag {
+      display: inline-block;
+      background: var(--coral-red);
+      color: #FFFFFF;
+    }
+
+    body[data-state="answer"] .option-btn.is-dimmed {
+      opacity: 0.32;
+      transform: scale(0.98);
+    }
+
+    /* Footer Action inside Left Panel */
+    .q-footer-action {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--grid-line);
+      padding-top: 16px;
+      gap: 12px;
+    }
+
+    .shift-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 24px;
+      border-radius: 999px;
+      border: none;
+      background: var(--pure-white);
+      color: var(--carbon-black);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      transition: transform 0.35s var(--ease-out-expo), background-color 0.35s ease, color 0.35s ease;
+    }
+
+    .shift-trigger-btn:hover {
+      transform: scale(1.04) translateX(4px);
+      background: var(--coral-red);
+      color: var(--pure-white);
+    }
+
+    .shift-spec-note {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    /* ==========================================================
+       4. RIGHT / VISUAL & ANSWER PUSH STAGE
+       ========================================================== */
+    .panel-right-stage {
+      position: relative;
+      width: 40%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      will-change: width, transform;
+      z-index: 15;
+      overflow: hidden;
+    }
+
+    /* Visual Window (Photo + Location Pin) */
+    .visual-frame-box {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      will-change: height, padding;
+    }
+
+    .visual-card-mask {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #04326B 0%, #0770E3 50%, #FF3B30 100%);
+      box-shadow: 0 26px 60px -15px rgba(0, 0, 0, 0.38);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+    }
+
+    .visual-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: contrast(1.06) saturate(1.08);
+      transform: scale(1.08);
+      will-change: transform;
+      z-index: 1;
+    }
+
+    .visual-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(11, 12, 16, 0.45) 0%, rgba(11, 12, 16, 0.12) 45%, rgba(11, 12, 16, 0.78) 100%);
+      z-index: 2;
+    }
+
+    /* Skyscanner-style Location Pin Pill */
+    .location-pin-bar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--carbon-black);
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 18px;
+      font-weight: 500;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    }
+
+    .pin-pill svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--sky-blue);
+      flex-shrink: 0;
+    }
+
+    .coord-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: #FFFFFF;
+      background: rgba(11, 12, 16, 0.65);
+      backdrop-filter: blur(8px);
+      padding: 7px 12px;
+      border-radius: 999px;
+    }
+
+    .visual-bottom-caption {
+      position: relative;
+      z-index: 3;
+      color: #FFFFFF;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .visual-Poster-Word {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 900;
+      font-size: clamp(28px, 3.2vw, 48px);
+      line-height: 0.85;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+    }
+
+    .visual-ratio-spec {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      opacity: 0.85;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================
+       5. ANSWER PUSH DRAWER (Pushes Up/In on Answer State)
+       ========================================================== */
+    .answer-push-container {
+      position: relative;
+      width: 100%;
+      height: 0%;
+      background: var(--bg-card);
+      color: var(--text-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 56px;
+      will-change: height, padding;
+      z-index: 20;
+    }
+
+    .answer-inner-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      max-width: 980px;
+    }
+
+    .answer-top-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .answer-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--sky-blue);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .answer-user-verdict {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .answer-serif-sub {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 20px;
+      color: var(--coral-red);
+      font-weight: 500;
+    }
+
+    /* Massive Display Answer Heading */
+    .answer-display-headline {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: clamp(28px, 3.3vw, 52px);
+      line-height: 0.94;
+      letter-spacing: -0.045em;
+      color: var(--text-card);
+    }
+
+    .answer-editorial-body {
+      font-size: clamp(15px, 1.2vw, 18.5px);
+      line-height: 1.62;
+      font-weight: 500;
+      color: rgba(11, 12, 16, 0.84);
+      border-left: 4px solid var(--sky-blue);
+      padding-left: 22px;
+      max-width: 880px;
+    }
+
+    /* ==========================================================
+       6. BOTTOM NAVIGATION & QUICK JUMP BAR
+       ========================================================== */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      border-top: 1px solid var(--grid-line);
+      backdrop-filter: blur(8px);
+    }
+
+    .progress-cluster {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 280px;
+    }
+
+    .slide-num-giant {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .slide-num-giant span {
+      opacity: 0.5;
+      font-weight: 600;
+    }
+
+    .progress-rail {
+      width: 150px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 1%;
+      background: var(--coral-red);
+      border-radius: 999px;
+      transition: width 0.5s var(--ease-out-expo);
+    }
+
+    .jump-select-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .jump-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: rgba(11, 12, 16, 0.55);
+      color: #FFFFFF;
+      border: 1px solid var(--grid-line);
+      border-radius: 999px;
+      padding: 10px 42px 10px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      max-width: 410px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .jump-select:hover, .jump-select:focus {
+      outline: none;
+      border-color: #FFFFFF;
+      background: rgba(11, 12, 16, 0.85);
+    }
+
+    .jump-select option {
+      background: #0B0C10;
+      color: #FFFFFF;
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 16px;
+      pointer-events: none;
+      font-size: 10px;
+      opacity: 0.8;
+    }
+
+    .nav-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-pill-btn {
+      height: 44px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 1px solid var(--grid-line);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    .nav-pill-btn:hover:not(:disabled) {
+      background: var(--pure-white);
+      color: var(--carbon-black);
+      transform: translateY(-2px);
+    }
+
+    .nav-pill-btn.primary-action {
+      background: var(--pure-white);
+      color: var(--carbon-black);
+      border-color: var(--pure-white);
+    }
+
+    .nav-pill-btn.primary-action:hover:not(:disabled) {
+      background: var(--coral-red);
+      color: var(--pure-white);
+      border-color: var(--coral-red);
+    }
+
+    .nav-pill-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 1024px) {
+      .spec-telemetry { display: none; }
+      .panel-question { padding: 24px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .answer-push-container { padding: 0 28px; }
+      .jump-select { max-width: 220px; }
+    }
+  </style>
+</head>
+<body data-state="question">
+
+  <!-- 1. MOTION GRID WITH INTERSECTION DOTS -->
+  <div class="motion-grid-layer" id="motionGrid"></div>
+
+  <!-- 2. TOP BAR -->
+  <header class="top-bar">
+    <div class="brand-cluster">
+      <div class="brand-logo-pill">
+        <span class="dot"></span>
+        <span>РОССИЯ · BRAND IN MOTION</span>
+      </div>
+      <div class="spec-telemetry">
+        <span id="specScale">DISPLAY 0 · 240/85% · -5%</span>
+        <span>|</span>
+        <strong id="partTitle">Рубрика I: Мифы & Стереотипы</strong>
+      </div>
+    </div>
+
+    <div class="top-right-status">
+      <div class="timing-readout" id="timingReadout">01.00 / 50.00</div>
+      <div class="mode-pill" id="modePill">ВОПРОС · 1.00</div>
+    </div>
+  </header>
+
+  <!-- 3. MAIN SHIFT & PUSH STAGE -->
+  <main class="stage-viewport">
+
+    <!-- LEFT PANEL: QUESTION + 4 INTERACTIVE OPTIONS -->
+    <section class="panel-question" id="panelQuestion">
+      <div class="giant-index-watermark" id="giantWatermark">01</div>
+
+      <div class="q-header-group">
+        <div class="rubric-tag" id="rubricTag">МИФЫ & СТЕРЕОТИПЫ</div>
+        <div class="q-number-spec" id="qNumberSpec">No. 01 / 50</div>
+      </div>
+
+      <div class="q-center-wrap">
+        <div>
+          <div class="mask-overflow">
+            <div class="q-kicker-serif" id="qKickerSerif">Испытание стереотипа на прочность</div>
+          </div>
+          <div class="mask-overflow">
+            <h1 class="q-display-text" id="qDisplayText"></h1>
+          </div>
+        </div>
+
+        <!-- 4 OPTIONS (А, Б, В, Г) -->
+        <div class="options-grid" id="optionsGrid">
+          <button class="option-btn" type="button" data-idx="0">
+            <span class="option-letter">А</span>
+            <span class="option-text" id="optText0"></span>
+            <span class="option-status-tag" id="optTag0">ВЫБРАНО</span>
+          </button>
+          <button class="option-btn" type="button" data-idx="1">
+            <span class="option-letter">Б</span>
+            <span class="option-text" id="optText1"></span>
+            <span class="option-status-tag" id="optTag1">ВЫБРАНО</span>
+          </button>
+          <button class="option-btn" type="button" data-idx="2">
+            <span class="option-letter">В</span>
+            <span class="option-text" id="optText2"></span>
+            <span class="option-status-tag" id="optTag2">ВЫБРАНО</span>
+          </button>
+          <button class="option-btn" type="button" data-idx="3">
+            <span class="option-letter">Г</span>
+            <span class="option-text" id="optText3"></span>
+            <span class="option-status-tag" id="optTag3">ВЫБРАНО</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-footer-action">
+        <button class="shift-trigger-btn" id="shiftTriggerBtn" type="button">
+          <span id="shiftBtnLabel">ПРОВЕРИТЬ ОТВЕТ (SHIFT)</span>
+          <span>→</span>
+        </button>
+        <div class="shift-spec-note" id="shiftSpecNote">ВЫБЕРИТЕ ВАРИАНТ А / Б / В / Г</div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: VISUAL WINDOW + ANSWER PUSH -->
+    <section class="panel-right-stage" id="panelRightStage">
+
+      <!-- TOP/FULL VISUAL FRAME -->
+      <div class="visual-frame-box" id="visualFrameBox">
+        <div class="visual-card-mask" id="visualCardMask">
+          <img
+            id="visualPhoto"
+            class="visual-photo"
+            src=""
+            alt="Локация России"
+            onerror="this.style.opacity='0'"
+          />
+          <div class="visual-scrim"></div>
+
+          <div class="location-pin-bar">
+            <div class="pin-pill">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+              </svg>
+              <span id="pinLocationText">Ярославль · Золотое кольцо</span>
+            </div>
+            <div class="coord-tag" id="coordTag">57°37′N 39°53′E</div>
+          </div>
+
+          <div class="visual-bottom-caption">
+            <div class="visual-Poster-Word" id="visualPosterWord">МЕДВЕДИ</div>
+            <div class="visual-ratio-spec" id="visualRatioSpec">FRAME // 01</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM/MAIN ANSWER PUSH DRAWER -->
+      <div class="answer-push-container" id="answerPushContainer">
+        <div class="answer-inner-grid">
+          <div class="mask-overflow">
+            <div class="answer-top-meta" id="answerTopMeta">
+              <span class="answer-badge-pill" id="answerBadgePill">ПРАВИЛЬНЫЙ ОТВЕТ: Б</span>
+              <span class="answer-user-verdict" id="answerUserVerdict"></span>
+              <span class="answer-serif-sub" id="answerSerifSub">Проверено экспедицией</span>
+            </div>
+          </div>
+
+          <div class="mask-overflow">
+            <h2 class="answer-display-headline" id="answerDisplayHeadline"></h2>
+          </div>
+
+          <div class="mask-overflow">
+            <p class="answer-editorial-body" id="answerEditorialBody"></p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 4. BOTTOM CONTROLS -->
+  <footer class="bottom-bar">
+    <div class="progress-cluster">
+      <div class="slide-num-giant" id="slideCounterText">01 <span>/ 100</span></div>
+      <div class="progress-rail">
+        <div class="progress-bar-fill" id="progressBarFill"></div>
+      </div>
+    </div>
+
+    <div class="jump-select-wrap">
+      <select class="jump-select" id="questionJumpSelect" aria-label="Выбор вопроса"></select>
+      <span class="select-arrow">▼</span>
+    </div>
+
+    <div class="nav-btn-group">
+      <button class="nav-pill-btn" id="prevSlideBtn" type="button">← Назад</button>
+      <button class="nav-pill-btn primary-action" id="nextSlideBtn" type="button">Вперед →</button>
+    </div>
+  </footer>
+
+  <script>
+    // Build 48 grid cells for the Skyscanner technical background grid
+    const motionGridEl = document.getElementById('motionGrid');
+    for (let i = 0; i < 48; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'grid-cell';
+      motionGridEl.appendChild(cell);
+    }
+
+    const LETTERS = ['А', 'Б', 'В', 'Г'];
+
+    // ============================================================================
+    // COMPLETE 50 OBJECTS DATASET (= 100 SLIDES: QUESTION -> ANSWER) WITH 4 OPTIONS
+    // ============================================================================
+    const SLIDES_DATA = [
+      // ЧАСТЬ 1: МИФЫ & СТЕРЕОТИПЫ (Вопросы 1–10 = Слайды 1–20)
+      {
+        id: 1,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Ярославль & Камчатка",
+        coord: "57°37′N 39°53′E",
+        posterWord: "МЕДВЕДИ",
+        question: "Правда ли, что по улицам российских городов спокойно ходят бурые медведи, а прохожие уступают им очередь за кофе?",
+        options: [
+          "Да, в каждом сибирском дворе есть дежурный медведь",
+          "В городах — только на гербах, зато в природе России более 280 000 медведей",
+          "Медведи выходят на улицы только по зимним пятницам",
+          "Бурых медведей в России осталось меньше тысячи"
+        ],
+        correct: 1,
+        answerTitle: "Только на гербах городов и реках Камчатки!",
+        answerText: "В мегаполисах медведя можно встретить разве что на гербе Ярославля, Перми или Хабаровска. Зато в дикой природе России действительно живет крупнейшая в мире популяция бурого медведя — свыше 280 000 особей. В Кроноцком заповеднике на Камчатке косолапые рыбачат на лосося у самых кордонов, но в городах дороги принадлежат курьерам.",
+        photo: "https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #04244B 100%)"
+      },
+      {
+        id: 2,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Москва · Старый Арбат",
+        coord: "55°45′N 37°35′E",
+        posterWord: "УШАНКА",
+        question: "Действительно ли шапка-ушанка — это древнерусский головной убор, в котором жители России ходят даже на летний пляж?",
+        options: [
+          "Ее носили еще дружинники князя Владимира в X веке",
+          "Ее привез Петр I из Голландии вместе с коньками",
+          "Она вошла в обиход в XX веке от малахая и полярной шапки Нансена",
+          "Ее придумали золотоискатели Аляски в XIX веке"
+        ],
+        correct: 2,
+        answerTitle: "Наследница малахая и полярной шапки Нансена",
+        answerText: "Современная ушанка вошла в обиход только в XX столетии! Ее предками были кочевой тюркский малахай и суконная шапка полярника Фритьофа Нансена. В 1930-х годах ушанка стала частью формы моряков и военных, а сегодня в центре Москвы пушистые шапки чаще покупают иностранные путешественники, чем сами москвичи.",
+        photo: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #680904 100%)"
+      },
+      {
+        id: 3,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Оймякон · Якутия",
+        coord: "63°27′N 142°47′E",
+        posterWord: "−67.7 °C",
+        question: "Зачем жители Сибири и Якутии едят сливочный пломбир на улице в −45 °C и как на рынке в Оймяконе зимой продают молоко?",
+        options: [
+          "Пломбир греет горло, а молоко продают в чугунных термосах",
+          "Ради калорий, а молоко на морозе продают замороженными белыми кругами",
+          "Чтобы охладиться, а молоко продают только в сухом порошке",
+          "По предписанию врачей, а молоко зимой доставляют в капсулах"
+        ],
+        correct: 1,
+        answerTitle: "Калорийный десерт и ледяные диски парного молока",
+        answerText: "Настоящий пломбир из жирных сливок в мороз — идеальный источник быстрой энергии, который не течет по пальцам. А в якутском Оймяконе, на Полюсе холода Земли (где фиксировали −67,7 °C), парное молоко зимой вообще продают на рынке в виде застывших ледяных кругляшей без всяких пакетов и бутылок.",
+        photo: "https://images.unsplash.com/photo-1548625361-16800b3d35a7?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 4,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Санкт-Петербург",
+        coord: "59°56′N 30°18′E",
+        posterWord: "ТРИ СТРУНЫ",
+        question: "Сколько струн у настоящей балалайки и почему в XVII веке этот инструмент пытались запретить царским указом?",
+        options: [
+          "Три струны; из-за острых сатирических куплетов уличных скоморохов",
+          "Шесть струн; потому что на ней играли только иностранцы",
+          "Четыре струны; из-за дефицита клена и ели для корпусов",
+          "Семь струн; ее считали исключительно военным сигнальным инструментом"
+        ],
+        correct: 0,
+        answerTitle: "Всего три струны и острый язык скоморохов",
+        answerText: "У классической балалайки треугольный корпус и ровно три струны, две из которых строятся в унисон. В 1648 году царь Алексей Михайлович велел собирать и сжигать инструменты скоморохов, потому что уличные артисты распевали слишком дерзкие сатирические куплеты. А на мировые концертные сцены балалайку вывел в конце XIX века дворянин Василий Андреев.",
+        photo: "https://images.unsplash.com/photo-1556610961-2fecc5927173?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 5,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Тула · Оружейная слобода",
+        coord: "54°11′N 37°37′E",
+        posterWord: "САМОВАР",
+        question: "Зачем в старину на трубу тульского самовара надевали настоящий кожаный сапог — это розыгрыш или технология?",
+        options: [
+          "Чтобы просушить промокшую в дороге обувь перед чаепитием",
+          "Для ароматизации пара дегтем и натуральной кожей",
+          "Голенище сапога работало как кузнечные меха для раздувания углей",
+          "Так проверяли герметичность пайки медного корпуса"
+        ],
+        correct: 2,
+        answerTitle: "Ручная турбина для раздувания углей и шишек",
+        answerText: "Никаких шуток — чистая термодинамика! Классический жаровой самовар греет воду внутренней вертикальной топкой («кувшином»), куда засыпают древесный уголь и ароматные сосновые шишки. Когда тяга ослабевала, на жаровую трубу надевали голенище мягкого хромового сапога и качали им вверх-вниз, как кузнечными мехами.",
+        photo: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0B0C10 100%)"
+      },
+      {
+        id: 6,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Москва · Кольцевая линия",
+        coord: "55°45′N 37°37′E",
+        posterWord: "БЕЗ УЛЫБКИ",
+        question: "Почему в России не принято дежурно улыбаться незнакомцам в метро или лифте — неужели все вокруг чем-то расстроены?",
+        options: [
+          "Из-за сурового климата лицевые мышцы быстрее устают на ветру",
+          "В XIX веке действовал гласный указ о серьезности в общественных местах",
+          "В транспорте запрещено отвлекать пассажиров мимикой",
+          "Улыбка в русском коде общения — искренний знак личной симпатии, а не протокола"
+        ],
+        correct: 3,
+        answerTitle: "Улыбка — знак личной симпатии, а не формальности",
+        answerText: "В русском коммуникативном коде улыбка — это искренний сигнал: «Я рад именно тебе», а не протокольная вежливость. В деловой и уличной обстановке нормой считается сосредоточенное спокойствие. Но стоит перейти от формального знакомства к дружеской беседе, как суровость мгновенно сменяется радушием и щедрым застольем.",
+        photo: "https://images.unsplash.com/photo-1520106212299-d99c443e4568?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #032B5A 100%)"
+      },
+      {
+        id: 7,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Карелия · Березовая роща",
+        coord: "61°47′N 34°21′E",
+        posterWord: "ФРЕШ ЛЕСА",
+        question: "Иностранцы удивляются: как можно выжать «березовый сок» из твердого бревна? А как его собирают в России на самом деле?",
+        options: [
+          "Весной собирают по капле живую влагу из небольшого прокола в коре",
+          "Отжимают молодую бересту под тяжелым гранитным прессом",
+          "Вываривают березовые почки в ключевой воде с медом",
+          "Замачивают березовые поленья в родниках на три месяца"
+        ],
+        correct: 0,
+        answerTitle: "Весеннее сокодвижение живого дерева в апреле",
+        answerText: "Бревна в соковыжималку никто не засовывает! Всего две-три недели в году, когда тает снег, корни березы активно гонят вверх прозрачную сладковатую влагу, чтобы распустились листья. В коре делают аккуратный прокол, набирают освежающий напиток по капле, а затем обязательно закрывают ранку деревянным колышком или воском.",
+        photo: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0552A8 0%, #0770E3 100%)"
+      },
+      {
+        id: 8,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Суздаль & Алтай",
+        coord: "56°25′N 40°26′E",
+        posterWord: "+95 °C / −20 °C",
+        question: "Зачем в русской бане людей парят горячими березовыми вениками в +95 °C, а сразу после парной ныряют в ледяной сугроб?",
+        options: [
+          "Чтобы сбить лишний пар с деревянных полков",
+          "Для эфирного фитомассажа, тонуса сосудов и мощного выброса эндорфинов",
+          "Так проверяют выносливость перед зимней охотой",
+          "Веник охлаждает кожу, снижая температуру в парной на 30 градусов"
+        ],
+        correct: 1,
+        answerTitle: "Эфирный массаж и мощная тренировка сосудов",
+        answerText: "Банный веник работает как опахало и фитокомпресс: он нагнетает к коже горячий пар, насыщенный эфирными маслами и фитонцидами березового или дубового листа. А мгновенный прыжок из жары в снег или прорубь вызывает резкий тонус капилляров и мощный выброс эндорфинов — гормонов радости.",
+        photo: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #FF3B30 100%)"
+      },
+      {
+        id: 9,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "Москва — Владивосток",
+        coord: "43°07′N 131°54′E",
+        posterWord: "9288 КМ",
+        question: "Какова длина маршрута Транссибирской магистрали от Москвы до Владивостока — самой протяженной железной дороги планеты?",
+        options: [
+          "4 520 километров и 3 часовых пояса",
+          "6 100 километров и 5 часовых поясов",
+          "9 288 километров и смена 8 часовых поясов",
+          "11 900 километров и 11 часовых поясов"
+        ],
+        correct: 2,
+        answerTitle: "9288 километров и смена 8 часовых поясов",
+        answerText: "Для жителей самой большой страны мира (11 часовых поясов) расстояние в 400–500 км между городами — это короткая поездка на выходные. А главный маршрут Транссиба от Москвы до Владивостока тянется на 9288 км: поезд идет почти семь суток, пересекая Уральский хребет, великие сибирские реки и восемь часовых зон.",
+        photo: "https://images.unsplash.com/photo-1541447271487-09612b3f49f7?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #FF3B30 100%)"
+      },
+      {
+        id: 10,
+        rubric: "МИФЫ & СТЕРЕОТИПЫ",
+        location: "По всей России",
+        coord: "55°45′N 37°37′E",
+        posterWord: "ПАУЗА",
+        question: "Зачем перед выходом в аэропорт или на вокзал вся семья вдруг замолкает на минуту и садится на диван прямо в куртках?",
+        options: [
+          "Чтобы проверить прочность молний на зимних куртках",
+          "Обычай «присесть на дорожку» помогает успокоить суету и проверить документы",
+          "Так по старинному поверью пережидают нечетную минуту часа",
+          "Чтобы обувь приняла форму стопы перед долгой дорогой"
+        ],
+        correct: 1,
+        answerTitle: "Обычай «присесть на дорожку» против спешки",
+        answerText: "Старинная примета родилась из поверья, что домашние духи не любят суеты при расставании, поэтому их нужно успокоить тишиной. На практике же эта короткая остановка работает как идеальный чек-лист пилота: за 30 секунд тишины человек сразу вспоминает, взял ли он паспорт, билеты и выключил ли утюг.",
+        photo: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+
+      // ЧАСТЬ 2: ОТКРЫВАЯ РОССИЮ (Вопросы 11–50 = Слайды 21–100)
+      {
+        id: 11,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Озеро Байкал · Сибирь",
+        coord: "53°18′N 108°00′E",
+        posterWord: "1642 М",
+        question: "Какова максимальная глубина озера Байкал и какую долю всех мировых запасов жидкой пресной воды оно хранит?",
+        options: [
+          "980 метров и 5% пресной воды Земли",
+          "1 240 метров и 10% пресной воды Земли",
+          "1 642 метра и около 20% всей жидкой пресной воды Земли",
+          "2 100 метров и 35% пресной воды Земли"
+        ],
+        correct: 2,
+        answerTitle: "1642 метра глубины и 20% пресной воды Земли",
+        answerText: "Байкал — самое глубокое и древнее озеро планеты, возникшее около 25–35 миллионов лет назад. В его чаше содержится 23 615 кубических километров чистейшей воды — это пятая часть всех мировых поверхностных запасов пресной воды и больше, чем во всех пяти Великих озерах Северной Америки вместе взятых.",
+        photo: "https://images.unsplash.com/photo-1551845041-63e8e76836ea?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #021B3A 100%)"
+      },
+      {
+        id: 12,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Исток Ангары · Листвянка",
+        coord: "51°52′N 104°49′E",
+        posterWord: "АНГАРА",
+        question: "В Байкал несут свои воды более 330 рек и ручьев. А сколько рек вытекает из этого гигантского сибирского моря?",
+        options: [
+          "Ровно одна река — стремительная Ангара",
+          "Две реки — Ангара и Лена",
+          "Три реки — Ангара, Селенга и Баргузин",
+          "Ни одной, Байкал является бессточным водоемом"
+        ],
+        correct: 0,
+        answerTitle: "Ровно одна река — стремительная Ангара",
+        answerText: "Единственная река, вытекающая из Байкала, — полноводная Ангара, чей исток шириной в километр никогда не замерзает даже в лютые сибирские морозы. Посреди истока возвышается легендарный Шаман-камень: по бурятскому преданию, отец-Байкал метнул эту скалу вслед дочери Ангаре, сбежавшей к богатырю Енисею.",
+        photo: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #044894 0%, #0770E3 100%)"
+      },
+      {
+        id: 13,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Приэльбрусье · Кавказ",
+        coord: "43°21′N 42°26′E",
+        posterWord: "5642 М",
+        question: "Какая вершина является высочайшей точкой России и всей Европы, и чем она является по своему геологическому строению?",
+        options: [
+          "Гора Казбек (5 033 м) — гранитный пик",
+          "Гора Белуха (4 506 м) — складчатый хребет",
+          "Гора Народная (1 895 м) — кварцитовый массив",
+          "Двуглавый спящий стратовулкан Эльбрус (5 642 м)"
+        ],
+        correct: 3,
+        answerTitle: "Двуглавый спящий стратовулкан Эльбрус (5642 м)",
+        answerText: "Эльбрус на Северном Кавкавказе — это гигантский конус древнего вулкана с двумя вершинами: западной (5642 метра) и восточной (5621 метр). Его ледниковая шапка площадью более 130 квадратных километров питает водой крупнейшие реки региона — Кубань, Малку и Баксан.",
+        photo: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 14,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Камчатка · Усть-Камчатский р-н",
+        coord: "56°03′N 160°38′E",
+        posterWord: "ВУЛКАН",
+        question: "Как называется самый высокий действующий вулкан всей Евразии, расположенный на полуострове Камчатка?",
+        options: [
+          "Авачинская Сопка",
+          "Ключевская Сопка (около 4 800 метров)",
+          "Кроноцкая Сопка",
+          "Корякская Сопка"
+        ],
+        correct: 1,
+        answerTitle: "Ключевская Сопка — около 4800 метров огня и льда",
+        answerText: "Ключевская Сопка — активный стратовулкан идеальной конической формы, чья высота после извержений меняется от 4750 до 4850 метров. Всего же на Камчатке насчитывается около 300 вулканов, из которых порядка 30 действующих включены в список Всемирного природного наследия ЮНЕСКО.",
+        photo: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0B0C10 100%)"
+      },
+      {
+        id: 15,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Кроноцкий заповедник · Камчатка",
+        coord: "54°25′N 160°08′E",
+        posterWord: "ГЕЙЗЕРЫ",
+        question: "Кто и в каком году открыл знаменитую Долину гейзеров на Камчатке — единственное крупное гейзерное поле Евразии?",
+        options: [
+          "Витус Беринг во время экспедиции 1741 года",
+          "Иван Крузенштерн в 1805 году",
+          "Геолог Татьяна Устинова и проводник Анисифор Крупенин в апреле 1941 года",
+          "Степан Крашенинников в 1739 году"
+        ],
+        correct: 2,
+        answerTitle: "Геолог Татьяна Устинова в апреле 1941 года",
+        answerText: "До 1941 года считалось, что в Евразии нет крупных гейзеров. Во время трудного лыжного маршрута по Кроноцкому заповеднику гидролог Татьяна Устинова и проводник Анисифор Крупенин остановились на привал в каньоне реки Шумной, где прямо с противоположного берега ударила мощная струя кипятка и пара — гейзер «Первенец».",
+        photo: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #FF3B30 100%)"
+      },
+      {
+        id: 16,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Остров Кижи · Онежское озеро",
+        coord: "62°04′N 35°13′E",
+        posterWord: "22 ГЛАВЫ",
+        question: "Сколько куполов венчает деревянную Преображенскую церковь 1714 года на острове Кижи, срубленную без железных гвоздей?",
+        options: [
+          "22 ярусных купола, крытых резным осиновым лемехом",
+          "13 куполов, крытых лиственничной дранкой",
+          "33 купола, крытых медными листами",
+          "9 куполов, крытых карельской березой"
+        ],
+        correct: 0,
+        answerTitle: "22 ярусных купола, крытых резным осиновым лемехом",
+        answerText: "Тридцатисемиметровый храм сложен из карельской сосны только топором с ювелирной подгонкой бревен. Его 22 главки украшены 30 тысячами выпуклых чешуек из осины — «лемехом». Осина без всякой краски меняет цвет в зависимости от неба, отливая то серебром, то розовым закатным золотом.",
+        photo: "https://images.unsplash.com/photo-1548625361-16800b3d35a7?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 17,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Боголюбово · Владимирская обл.",
+        coord: "56°11′N 40°33′E",
+        posterWord: "1165 ГОД",
+        question: "Какой белокаменный храм XII века называют «белым лебедем русского зодчества» и почему его фундамент уходит в землю на 5 метров?",
+        options: [
+          "Успенский собор во Владимире — для хранения казны",
+          "Церковь Покрова на Нерли — для защиты от весеннего разлива рек",
+          "Дмитриевский собор — из-за скального грунта",
+          "Георгиевский собор — ради подземного хода к реке"
+        ],
+        correct: 1,
+        answerTitle: "Церковь Покрова на Нерли на рукотворном холме",
+        answerText: "Построенный в 1165 году при князе Андрее Боголюбском храм стоит на заливном лугу у слияния рек Нерли и Клязьмы. Чтобы весеннее половодье не подмыло стены, зодчие заложили глубокий пятиметровый фундамент и насыпали искусственный холм, облицованный белыми каменными плитами.",
+        photo: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #04326B 100%)"
+      },
+      {
+        id: 18,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Москва · Красная площадь",
+        coord: "55°45′N 37°37′E",
+        posterWord: "КРЕМЛЬ",
+        question: "Почему стены Московского Кремля увенчаны двурогими зубцами в форме «ласточкина хвоста», как в замках Милана и Вероны?",
+        options: [
+          "Это древний славянский символ соколиной охоты",
+          "Их перестроили в XIX веке по проекту Осипа Бове",
+          "В конце XV века Кремль по приглашению Ивана III строили итальянские зодчие",
+          "Для крепления деревянных навесов от снега"
+        ],
+        correct: 2,
+        answerTitle: "В конце XV века Кремль возводили итальянские зодчие",
+        answerText: "Великий князь Иван III пригласил для строительства новой кирпичной крепости и соборов выдающихся архитекторов итальянского Возрождения — Аристотеля Фиораванти, Пьетро Антонио Солари и Алевиза Нового. Они соединили русскую градостроительную традицию с передовой североитальянской фортификацией.",
+        photo: "https://images.unsplash.com/photo-1520106212299-d99c443e4568?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #7F1D1D 100%)"
+      },
+      {
+        id: 19,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Санкт-Петербург · Дворцовая пл.",
+        coord: "59°56′N 30°18′E",
+        posterWord: "ЭРМИТАЖ",
+        question: "Сколько лет потребуется человеку, чтобы осмотреть всю коллекцию Эрмитажа, уделяя каждому экспонату всего по одной минуте?",
+        options: [
+          "Около 3 месяцев",
+          "Ровно 1 год",
+          "Около 2 лет",
+          "Почти 6 лет непрерывного просмотра без сна (более 3 млн экспонатов)"
+        ],
+        correct: 3,
+        answerTitle: "Почти 6 лет непрерывного просмотра без сна!",
+        answerText: "В хранилищах и залах Государственного Эрмитажа собрано более 3 миллионов памятников мирового искусства и археологии. Общая длина прогулочного маршрута только по открытым залам Зимнего дворца и прилегающих зданий превышает 22 километра.",
+        photo: "https://images.unsplash.com/photo-1556610961-2fecc5927173?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 20,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Петергоф · Финский залив",
+        coord: "59°53′N 29°54′E",
+        posterWord: "ФОНТАНЫ",
+        question: "Какой двигатель качает воду для 150 фонтанов Большого каскада и Нижнего парка Петергофа?",
+        options: [
+          "Ни одного насоса — вода идет самотеком за счет перепада высот с Ропшинских родников",
+          "Подземные паровые машины петровской эпохи",
+          "Современные морские турбины на берегу Финского залива",
+          "Система ветряных насосов на дамбе"
+        ],
+        correct: 0,
+        answerTitle: "Ни одного насоса — работает чистая гравитация!",
+        answerText: "Уникальная самотечная водоводная система Петергофа была спроектирована в 1721 году русским инженером-гидротехником Василием Туволковым. Вода бежит с Ропшинских высот по каналам длиной 24 км, и за счет естественного перепада высот струя главного фонтана «Самсон» бьет вверх на 21 метр.",
+        photo: "https://images.unsplash.com/photo-1548625361-16800b3d35a7?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #032B5A 100%)"
+      },
+      {
+        id: 21,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Кяхта · Бурятия",
+        coord: "50°21′N 106°27′E",
+        posterWord: "ЧАЙНЫЙ ПУТЬ",
+        question: "Какой забайкальский город в XIX веке называли «Песчаной Венецией» и главной чайной столицей Российской империи?",
+        options: [
+          "Нерчинск",
+          "Купеческая Кяхта на границе с Монголией",
+          "Верхнеудинск",
+          "Енисейск"
+        ],
+        correct: 1,
+        answerTitle: "Купеческая Кяхта на границе с Монголией",
+        answerText: "Через Кяхту более полутора столетий шли караваны Великого чайного пути из Китая через Сибирь в Москву и Европу. Упакованный в кожаные ящики-цибики сухопутный «кяхтинский чай» ценился в мире гораздо выше морского, так как не отсыревал в трюмах кораблей.",
+        photo: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #FF3B30 100%)"
+      },
+      {
+        id: 22,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Абрамцево · Сергиев Посад",
+        coord: "56°14′N 37°58′E",
+        posterWord: "МАТРЕШКА",
+        question: "В каком году появилась первая русская матрешка и кого держала в руках самая первая расписная кукла?",
+        options: [
+          "В 1650 году — держала лукошко с ягодами",
+          "В 1799 году — держала расписной самовар",
+          "В 1890 году — крестьянка держала в руках черного петуха",
+          "В 1912 году — держала балалайку"
+        ],
+        correct: 2,
+        answerTitle: "В 1890 году — крестьянка с черным петухом",
+        answerText: "Первую русскую разъемную куклу из восьми фигурок выточил токарь Василий Звездочкин по эскизам художника Сергея Малютина в 1890 году. На Всемирной выставке в Париже в 1900 году русская матрешка произвела фурор и получила золотую медаль, став главным сувенирным символом страны.",
+        photo: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0770E3 100%)"
+      },
+      {
+        id: 23,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Семенов · Нижегородская обл.",
+        coord: "56°47′N 44°29′E",
+        posterWord: "ХОХЛОМА",
+        question: "Сколько граммов настоящего золота уходит на изготовление одной сияющей чаши в технике «Золотой Хохломы»?",
+        options: [
+          "Около 2 граммов сусального золота",
+          "Половина грамма золотой пыли",
+          "Около 5 граммов золотой амальгамы",
+          "Ноль граммов — золотой блеск дают оловянный порошок и льняная олифа в печи"
+        ],
+        correct: 3,
+        answerTitle: "Ноль граммов — секрет в серебристом порошке и печи!",
+        answerText: "Никакого драгоценного металла в Хохломе нет. Деревянную заготовку грунтуют глиной, натирают блестящим оловянным (или алюминиевым) порошком, расписывают кистью и покрывают льняным лаком-олифой. В горячей печи олифа приобретает янтарный оттенок, и серебристая поверхность вспыхивает как чистое золото.",
+        photo: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #FF3B30 100%)"
+      },
+      {
+        id: 24,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Гжель · Московская обл.",
+        coord: "55°37′N 38°24′E",
+        posterWord: "КОБАЛЬТ",
+        question: "Какого цвета краску наносит кистью мастер Гжели до того, как фарфоровая ваза отправится в раскаленную печь?",
+        options: [
+          "Темно-серую (оксид кобальта становится синим только при обжиге в 1350 °C)",
+          "Небесно-голубую акварель",
+          "Ярко-фиолетовую эмаль",
+          "Золотисто-желтую глазурь"
+        ],
+        correct: 0,
+        answerTitle: "Темно-серую! Синим кобальт становится при 1350 °C",
+        answerText: "До обжига оксид кобальта выглядит как матовая черно-серая тушь. Художник пишет вслепую фирменным «мазком с тенями», контролируя лишь нажим кисти. Только в пламени печи при температуре свыше 1300 °C происходит химическая реакция, превращающая серый цвет в звонкую лазурь.",
+        photo: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #022047 100%)"
+      },
+      {
+        id: 25,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Санкт-Петербург · Большая Морская",
+        coord: "59°56′N 30°19′E",
+        posterWord: "ФАБЕРЖЕ",
+        question: "Какой сюрприз скрывался внутри самого первого императорского яйца Карла Фаберже, созданного в 1885 году?",
+        options: [
+          "Серебряный двуглавый орел с сапфирами",
+          "Матовый золотой желток, а внутри — золотая курочка с короной",
+          "Музыкальная шкатулка с мелодией Глинки",
+          "Миниатюрный портрет императора на слоновой кости"
+        ],
+        correct: 1,
+        answerTitle: "Матовый золотой желток и золотая курочка с короной",
+        answerText: "Первое пасхальное яйцо «Курочка» заказал император Александр III для супруги Марии Федоровны. Белая эмалевая «скорлупа» открывалась, обнажая золотой желток, внутри которого сидела курочка из цветного золота с рубиновыми глазками, хранившая миниатюрную копию императорской короны.",
+        photo: "https://images.unsplash.com/photo-1556610961-2fecc5927173?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 26,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Великий Новгород · Неревский раскоп",
+        coord: "58°31′N 31°16′E",
+        posterWord: "ОНФИМ · XIII В.",
+        question: "Кто такой семилетний мальчик Онфим из Великого Новгорода XIII века и чем его «тетрадки» прославились на весь мир?",
+        options: [
+          "Ученик иконописца Феофана Грека",
+          "Юный звонарь Софийского собора",
+          "Автор дошедших до нас берестяных грамот с азбукой и детскими рисунками всадников",
+          "Герой новгородской былины о Садко"
+        ],
+        correct: 2,
+        answerTitle: "Автор древнерусских рисунков и прописей на бересте",
+        answerText: "Археологи нашли в Великом Новгороде более 1100 берестяных грамот, доказавших высокую грамотность в средневековой Руси. На 17 кусочках бересты около 1260 года мальчик Онфим учился выводить буквы острым писалом, а в перерывах рисовал себя на коне, побеждающего врагов.",
+        photo: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 27,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Ясная Поляна · Тульская обл.",
+        coord: "54°04′N 37°31′E",
+        posterWord: "559 ГЕРОЕВ",
+        question: "Сколько действующих лиц появляется на страницах четырех томов романа-эпопеи Льва Толстого «Война и мир»?",
+        options: [
+          "Ровно 100 персонажей",
+          "Около 210 персонажей",
+          "340 персонажей",
+          "559 персонажей, включая около 200 реальных исторических личностей"
+        ],
+        correct: 3,
+        answerTitle: "559 персонажей, включая около 200 исторических лиц",
+        answerText: "Лев Николаевич Толстой создавал «Войну и мир» на протяжении шести лет (1863–1869), переписав рукопись вручную при помощи супруги Софьи Андреевны до восьми раз. Для описания Бородинской битвы писатель дважды лично объехал все Бородинское поле и составил собственную схему сражения.",
+        photo: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #04326B 100%)"
+      },
+      {
+        id: 28,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Клин · Музей П. И. Чайковского",
+        coord: "56°20′N 36°43′E",
+        posterWord: "ЧЕЛЕСТА",
+        question: "Какой новый инструмент П. И. Чайковский попросил тайно привезти из Парижа в 1891 году для танца Феи Драже в «Щелкунчике»?",
+        options: [
+          "Челесту с хрустальным колокольчиковым звучанием",
+          "Стеклянную арфу",
+          "Саксофон системы Адольфа Сакса",
+          "Клавесин с двойной мануалой"
+        ],
+        correct: 0,
+        answerTitle: "Челесту с хрустальным колокольчиковым звучанием",
+        answerText: "Услышав в Париже изобретение Огюста Мюстеля — клавишный металлофон со стальными пластинами и деревянными резонаторами, — Чайковский написал издателю Юргенсону секретное письмо. Он просил никому не показывать челесту до премьеры «Щелкунчика», чтобы Римский-Корсаков не опередил его.",
+        photo: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0B0C10 100%)"
+      },
+      {
+        id: 29,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Санкт-Петербург · Русский музей",
+        coord: "59°56′N 30°19′E",
+        posterWord: "АВАНГАРД",
+        question: "Для какой футуристической оперы Казимир Малевич в 1913 году впервые нарисовал прообраз «Черного квадрата»?",
+        options: [
+          "Для балета «Жар-птица»",
+          "Для авангардной оперы «Победа над Солнцем»",
+          "Для драмы «Мистерия-Буфф»",
+          "Для оперы «Любовь к трем апельсинам»"
+        ],
+        correct: 1,
+        answerTitle: "Для авангардной оперы «Победа над Солнцем»",
+        answerText: "За два года до знаменитой выставки «0,10» Малевич создавал эскизы костюмов и декораций к футуристической опере композитора Михаила Матюшина и поэта Алексея Крученых. На театральном заднике черный квадрат перекрывал солнечный диск, символизируя победу человеческого творчества над природой.",
+        photo: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #FF3B30 100%)"
+      },
+      {
+        id: 30,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Санкт-Петербург · Университетская наб.",
+        coord: "59°56′N 30°17′E",
+        posterWord: "МЕНДЕЛЕЕВ",
+        question: "За какое ремесло петербургские купцы с уважением называли великого химика Дмитрия Менделеева «чемоданных дел мастером»?",
+        options: [
+          "Он коллекционировал старинные саквояжи со всего мира",
+          "Он разработал ГОСТ для железнодорожного багажа",
+          "Он в свободное время мастерски клеил дорожные чемоданы по собственному рецепту клея",
+          "Он хранил колбы и реактивы в чемоданах"
+        ],
+        correct: 2,
+        answerTitle: "Он мастерски клеил дорожные чемоданы по своей рецептуре",
+        answerText: "Создатель Периодической системы химических элементов (1869) отдыхал от научных трудов за переплетом книг и изготовлением сверхпрочных дорожных чемоданов, для которых сам сварил особый водостойкий клей. А в 1887 году 53-летний Менделеев в одиночку поднялся на аэростате выше облаков для наблюдения затмения.",
+        photo: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #04244B 100%)"
+      },
+      {
+        id: 31,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Саратовская обл. · Парк покорителей космоса",
+        coord: "51°16′N 45°59′E",
+        posterWord: "108 МИНУТ",
+        question: "Сколько минут длился первый космический полет Юрия Гагарина 12 апреля 1961 года и какой у него был радиопозывной?",
+        options: [
+          "90 минут, позывной «Сокол»",
+          "108 минут вокруг Земли с позывным «Кедр»",
+          "120 минут, позывной «Заря»",
+          "75 минут, позывной «Байкал»"
+        ],
+        correct: 1,
+        answerTitle: "108 минут вокруг Земли с позывным «Кедр»",
+        answerText: "Корабль «Восток-1», созданный под руководством главного конструктора Сергея Королева, стартовал с позывным «Кедр» и знаменитым словом «Поехали!». Облетев земной шар за 1 час 48 минут на высоте до 327 километров, Гагарин успешно приземлился на правом берегу Волги неподалеку от города Энгельса.",
+        photo: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 32,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Королев · Московская обл.",
+        coord: "55°55′N 37°49′E",
+        posterWord: "СПУТНИК-1",
+        question: "Почему радиосигнал «Бип-бип» первого искусственного спутника Земли 4 октября 1957 года смогли услышать радиолюбители всего мира?",
+        options: [
+          "Передатчик вещал на открытых коротких волнах 20 и 40 МГц, доступных обычным приемникам",
+          "Спутник летел на высоте всего 15 километров",
+          "Сигнал усиливали все морские маяки планеты",
+          "На спутнике был установлен мощный рупорный динамик"
+        ],
+        correct: 0,
+        answerTitle: "Спутник вещал на открытых частотах 20 и 40 МГц",
+        answerText: "Конструкторы специально выбрали коротковолновый диапазон, доступный любому любительскому приемнику от Токио до Нью-Йорка. При этом длительность сигналов менялась при изменении температуры и давления внутри алюминиевой сферы, превращая простой «бип-бип» в первую космическую телеметрию.",
+        photo: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 33,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Плато Путорана · Красноярский край",
+        coord: "69°00′N 93°00′E",
+        posterWord: "ПУТОРАНА",
+        question: "Какой заповедный массив столовых гор за Полярным кругом называют «краем десяти тысяч озер и тысячи водопадов»?",
+        options: [
+          "Хибинские горы на Кольском полуострове",
+          "Валдайская возвышенность",
+          "Плато Путорана (где находится и географический центр России — озеро Виви)",
+          "Плато Лаго-Наки"
+        ],
+        correct: 2,
+        answerTitle: "Плато Путорана — базальтовый мир ЮНЕСКО",
+        answerText: "Площадь плато Путорана на северо-западе Среднесибирского плоскогорья сопоставима с территорией Великобритании. Здесь, среди гигантских ступенчатых каньонов и фьордообразных озер, находится географический центр России — озеро Виви, а также высочайшие водопады страны.",
+        photo: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #044894 100%)"
+      },
+      {
+        id: 34,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Река Лена · Хангаласский улус, Якутия",
+        coord: "61°06′N 127°21′E",
+        posterWord: "220 МЕТРОВ",
+        question: "Какое природное чудо на берегу реки Лены в Якутии тянется на 40 километров, напоминая готические соборы и башни?",
+        options: [
+          "Столбы выветривания Маньпупунер",
+          "Красноярские Столбы",
+          "Кунгурские скалы",
+          "Ленские столбы из кембрийского известняка высотой до 220 метров"
+        ],
+        correct: 3,
+        answerTitle: "Ленские столбы из кембрийского известняка",
+        answerText: "Отвесные каменные шпили высотой до 220 метров сформировались из донных отложений древнего моря возрастом более 530 миллионов лет. Экстремальный перепад якутских температур (более 100 градусов между зимой и летом) и речные ветры выточили этот грандиозный каменный лес.",
+        photo: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0770E3 100%)"
+      },
+      {
+        id: 35,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Гора Народная · Приполярный Урал",
+        coord: "65°02′N 60°06′E",
+        posterWord: "УРАЛ · 2500 КМ",
+        question: "Какой горный хребет в России является одним из древнейших на Земле и служит природной границей между Европой и Азией?",
+        options: [
+          "Уральские горы — «Каменный пояс» возрастом свыше 350 млн лет",
+          "Саянский хребет",
+          "Верхоянский хребет",
+          "Хребет Черского"
+        ],
+        correct: 0,
+        answerTitle: "Уральские горы — «Каменный пояс» возрастом 350 млн лет",
+        answerText: "Уральский хребет протянулся более чем на 2500 километров от берегов Карского моря до полупустынь Казахстана. На Урале встречаются стелы «Европа — Азия», где путешественник может стоять одной ногой в Европе, а другой в Азии, а в недрах гор скрыта почти вся таблица Менделеева.",
+        photo: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 36,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Москва · Станция «Маяковская»",
+        coord: "55°46′N 37°35′E",
+        posterWord: "МЕТРОПОЛИТЕН",
+        question: "Где в Москве миллионы людей каждый день проходят в полуметре от настоящих окаменелостей юрского и мелового периодов?",
+        options: [
+          "В кирпичной кладке Китай-города",
+          "В мраморных колоннах и стенах станций Московского метрополитена",
+          "На чугунных мостах через Яузу",
+          "В гранитной брусчатке Красной площади"
+        ],
+        correct: 1,
+        answerTitle: "В мраморных колоннах станций Московского метро!",
+        answerText: "Стены и колонны станций «Парк культуры», «Комсомольская», «Добрынинская», «Площадь Ильича» и десятков других облицованы натуральным мраморовидным известняком древних морей. Прямо в полированном камне легко заметить окаменелые раковины аммонитов, наутилусов, гастропод и морских лилий.",
+        photo: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0B0C10 100%)"
+      },
+      {
+        id: 37,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Янтарный · Калининградская обл.",
+        coord: "54°52′N 19°56′E",
+        posterWord: "90% ЯНТАРЯ",
+        question: "На побережье какого моря в России сосредоточено около 90% всех разведанных мировых запасов солнечного камня — янтаря?",
+        options: [
+          "На берегу Белого моря",
+          "На берегу Охотского моря",
+          "На берегу Балтийского моря в поселке Янтарный Калининградской области",
+          "На берегу Черного моря"
+        ],
+        correct: 2,
+        answerTitle: "Балтийское море · Приморский карьер в поселке Янтарный",
+        answerText: "Балтийский янтарь — это окаменевшая живица доисторических сосен, росших на этой территории 40–50 миллионов лет назад. В Калининградской области находится единственное в мире промышленное месторождение янтаря, где нередко находят «инклюзы» — застывшие в прозрачной смоле древние растения и насекомых.",
+        photo: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #FF3B30 100%)"
+      },
+      {
+        id: 38,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Мурманск · Кольский залив",
+        coord: "68°58′N 33°05′E",
+        posterWord: "68°58′ С.Ш.",
+        question: "Какой российский город является самым крупным в мире мегаполисом за Северным полярным кругом и почему его порт не замерзает зимой?",
+        options: [
+          "Архангельск — за счет течения Северной Двины",
+          "Норильск — из-за подземных термальных источников",
+          "Певек — благодаря ветрам Восточно-Сибирского моря",
+          "Мурманск — Кольский залив согревает теплое течение Гольфстрима"
+        ],
+        correct: 3,
+        answerTitle: "Мурманск — его согревает теплое течение Гольфстрима",
+        answerText: "Расположенный на широте почти 69 градусов Мурманск омывается теплым Нордкапским течением (ветвью Гольфстрима), поэтому Кольский залив остается свободным ото льда круглый год. Именно здесь базируется единственный в мире атомный ледокольный флот России во главе с первым атомоходом «Ленин».",
+        photo: "https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #021B3A 100%)"
+      },
+      {
+        id: 39,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Муром · Владимирская обл.",
+        coord: "55°34′N 42°02′E",
+        posterWord: "ДО РУЧКИ",
+        question: "Как старинный муромский калач в форме гири или замка объясняет происхождение фразеологизма «дойти до ручки»?",
+        options: [
+          "Тонкую дужку калача держали немытыми руками на улице и из гигиены не ели сами",
+          "Внутрь ручки прятали монетку на счастье",
+          "Калачи развешивали на дверных ручках пекарен",
+          "Ручку делали из пресного несъедобного теста"
+        ],
+        correct: 0,
+        answerTitle: "Тонкую дужку калача держали руками на улице и не ели",
+        answerText: "Пышный пшеничный калач выпекали с круглой «губой», пухлым «животиком» и узкой перемычкой-ручкой. Покупатели на ярмарках держали горячую выпечку за эту ручку прямо на ходу. По правилам гигиены саму ручку не доедали, а отдавали беднякам или птицам — отсюда и присловье «дойти до ручки».",
+        photo: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #680904 100%)"
+      },
+      {
+        id: 40,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Нижний Новгород — Астрахань",
+        coord: "56°19′N 44°00′E",
+        posterWord: "ВОЛГА · 3530 КМ",
+        question: "Какая река России является самой длинной рекой всей Европы и в какое внутреннее море-озеро она впадает?",
+        options: [
+          "Дон (1 870 км), впадающий в Азовское море",
+          "Волга (3 530 км), впадающая в Каспийское море",
+          "Печора (1 809 км), впадающая в Баренцево море",
+          "Кама (1 805 км), впадающая в Черное море"
+        ],
+        correct: 1,
+        answerTitle: "Волга (3530 км), впадающая в Каспийское море",
+        answerText: "Начинаясь крошечным ручейком на Валдайской возвышенности, Волга принимает около 200 притоков (включая Оку и Каму) и несет воды в Каспийское море. В ее обширной дельте под Астраханью каждое лето расцветают розовые поля каспийского лотоса и гнездятся редкие кудрявые пеликаны.",
+        photo: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #04326B 100%)"
+      },
+      {
+        id: 41,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Ушканьи острова · Байкал",
+        coord: "53°51′N 108°38′E",
+        posterWord: "НЕРПА",
+        question: "Как называется единственный в мире вид тюленей, живущий исключительно в пресной воде в тысячах километров от океана?",
+        options: [
+          "Каспийский котик",
+          "Камчатский сивуч",
+          "Байкальская нерпа — пресноводный эндемик Байкала",
+          "Беломорский лысун"
+        ],
+        correct: 2,
+        answerTitle: "Байкальская нерпа — серебристый символ Байкала",
+        answerText: "Байкальская нерпа — пресноводный эндемик, чьи предки предположительно проникли в сибирское озеро из Северного Ледовитого океана по Енисею и Ангаре в эпоху оледенения. Детеныши нерпы («бельки») рождаются в снежных логовах на льду в белоснежной шубке, делающей их невидимыми.",
+        photo: "https://images.unsplash.com/photo-1551845041-63e8e76836ea?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 42,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Санкт-Петербург · Политехнический ун-т",
+        coord: "60°00′N 30°22′E",
+        posterWord: "ТЕРМЕНВОКС",
+        question: "Какой бесконтактный музыкальный инструмент изобрел в 1920 году в Петрограде физик Лев Термен, заложив основу электронной музыки?",
+        options: [
+          "Оптический фотофон",
+          "Акустический граммофон",
+          "Лазерный клавикорд",
+          "Терменвокс — игра движением ладоней в электромагнитном поле двух антенн"
+        ],
+        correct: 3,
+        answerTitle: "Терменвокс — игра движением ладоней в воздухе",
+        answerText: "Работая над измерением диэлектрической проницаемости газов, Лев Термен создал инструмент с двумя металлическими антеннами. Музыкант играет стоя, не касаясь корпуса: приближение правой руки к вертикальной антенне меняет высоту тона, а левой к горизонтальной петле — громкость звука.",
+        photo: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #FF3B30 100%)"
+      },
+      {
+        id: 43,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Москва · Красная площадь",
+        coord: "55°45′N 37°37′E",
+        posterWord: "ПОКРОВСКИЙ СОБОР",
+        question: "Сколько отдельных храмов объединено на едином основании собора Василия Блаженного (Покрова на Рву) в Москве?",
+        options: [
+          "Изначально 9 церквей, а вместе с поздними приделами — 11",
+          "Ровно 5 купольных храмов",
+          "7 храмов по числу холмов Москвы",
+          "3 храма под одной крышей"
+        ],
+        correct: 0,
+        answerTitle: "Изначально 9 церквей, а вместе с поздними приделами — 11",
+        answerText: "Возведенный в 1555–1561 годах зодчими Бармой и Постником собор состоит из центрального шатрового храма Покрова Богородицы, окруженного восемью столпообразными церквями с неповторяющимися узорными куполами. В 1588 году к северо-восточному углу пристроили десятый храм над мощами Василия Блаженного.",
+        photo: "https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0B0C10 100%)"
+      },
+      {
+        id: 44,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Горный Алтай · Катунский хребет",
+        coord: "49°48′N 86°35′E",
+        posterWord: "БЕЛУХА · 4506 М",
+        question: "Как называется высочайшая двуглавая вершина Сибири и Алтайских гор, равноудаленная сразу от четырех океанов Земли?",
+        options: [
+          "Пик Мунку-Сардык",
+          "Гора Белуха (4 506 м) — сердце «Золотых гор Алтая»",
+          "Пик Победа",
+          "Гора Бырранга"
+        ],
+        correct: 1,
+        answerTitle: "Гора Белуха (4506 м) — сердце «Золотых гор Алтая»",
+        answerText: "Венчающая Катунский хребет Белуха покрыта 169 ледниками, дающими начало стремительной бирюзовой реке Катунь. Горный Алтай входит в список Всемирного наследия ЮНЕСКО как место обитания редчайшего снежного барса (ирбиса) и центр пазырыкской археологической культуры.",
+        photo: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 45,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Сихотэ-Алинь · Приморский край",
+        coord: "45°00′N 136°00′E",
+        posterWord: "АМУРСКИЙ ТИГР",
+        question: "Какой подвид тигра в уссурийской тайге Дальнего Востока России является самым крупным и единственным освоившим жизнь в снегах?",
+        options: [
+          "Бенгальский тигр",
+          "Суматранский тигр",
+          "Амурский (уссурийский) тигр — более 750 особей в дикой природе России",
+          "Каспийский барс"
+        ],
+        correct: 2,
+        answerTitle: "Амурский (уссурийский) тигр — властелин тайги",
+        answerText: "Амурский тигр легко переносит морозы до −40 °C благодаря густому зимнему меху и широким лапам, не проваливающимся в наст. В середине XX века в природе оставалось менее 50 этих кошек, но благодаря заповедникам Приморья и Хабаровского края их численность в России превысила 750 особей.",
+        photo: "https://images.unsplash.com/photo-1508817628294-5a453fa0b8fb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0B0C10 100%)"
+      },
+      {
+        id: 46,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Москва · Театральная площадь",
+        coord: "55°45′N 37°37′E",
+        posterWord: "БОЛЬШОЙ ТЕАТР",
+        question: "Какая необычная деталь отличает бронзовых коней квадриги Аполлона работы Петра Клодта над портиком Большого театра?",
+        options: [
+          "Кони подкованы чистым золотом",
+          "Один из коней смотрит назад на зрителей",
+          "У всех четырех коней крылья за спиной",
+          "У коней Аполлона нет удил и поводьев — символ полной свободы искусств"
+        ],
+        correct: 3,
+        answerTitle: "У коней Аполлона нет удил и поводьев — символ свободы искусств!",
+        answerText: "Созданная в 1856 году знаменитым скульптором Петром Клодтом колесница бога искусств Аполлона устремлена вперед без уздечек и вожжей. А сам исторический зрительный зал Большого театра спроектирован по принципу гигантского деревянного музыкального инструмента из резонансной ели для эталонной акустики.",
+        photo: "https://images.unsplash.com/photo-1520106212299-d99c443e4568?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #0770E3 100%)"
+      },
+      {
+        id: 47,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Москва · Пресня",
+        coord: "55°45′N 37°34′E",
+        posterWord: "200 000 СЛОВ",
+        question: "Кто в одиночку за 53 года собрал 200 000 слов для «Толкового словаря живого великорусского языка», будучи моряком и хирургом?",
+        options: [
+          "Владимир Иванович Даль (1801–1872)",
+          "Сергей Иванович Ожегов",
+          "Дмитрий Николаевич Ушаков",
+          "Александр Христофорович Востоков"
+        ],
+        correct: 0,
+        answerTitle: "Владимир Иванович Даль (1801–1872)",
+        answerText: "Свое первое народное слово девятнадцатилетний мичман Даль записал по дороге из Петербурга в Николаев в 1819 году. На протяжении полувека в военных походах и поездках по губерниям он фиксировал живую речь, говоры, ремесленные термины и свыше 30 тысяч русских пословиц.",
+        photo: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #04244B 100%)"
+      },
+      {
+        id: 48,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Палех · Ивановская обл.",
+        coord: "56°48′N 41°51′E",
+        posterWord: "ПАЛЕХ",
+        question: "Из какого неожиданного материала делают корпуса знаменитых черных лаковых шкатулок Палеха и Федоскино?",
+        options: [
+          "Из черного мореного дуба со дна рек",
+          "Из прессованного картона (папье-маше), проваренного в льняном масле",
+          "Из уральского черного агата",
+          "Из кованой вороненой меди"
+        ],
+        correct: 1,
+        answerTitle: "Не из дерева, а из прессованного картона (папье-маше)!",
+        answerText: "Стенки шкатулки склеивают из десятков слоев древесного картона, пропитывают кипящим льняным маслом и сушат в печи две недели — получается материал, который не трескается и звонко стучит как кость. Миниатюру пишут яичной темперой и сусальным золотом, полируя его до блеска зубом волка.",
+        photo: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0B0C10 0%, #FF3B30 100%)"
+      },
+      {
+        id: 49,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Москва · Вычислительный центр АН",
+        coord: "55°41′N 37°34′E",
+        posterWord: "ТЕТРИС · 1984",
+        question: "Какими символами рисовались фигурки самой первой версии игры «Тетрис», написанной Алексеем Пажитновым в Москве в 1984 году?",
+        options: [
+          "Цветными трехмерными кубиками",
+          "Нулями и единицами",
+          "Обычными текстовыми квадратными скобками «[ ]» на мониторе «Электроники-60»",
+          "Символами шахматных фигур"
+        ],
+        correct: 2,
+        answerTitle: "Обычными текстовыми скобками [ ] на черно-зеленом экране!",
+        answerText: "У компьютера «Электроника-60» в Вычислительном центре Академии наук вообще не было графического видеорежима. Поэтому программист Алексей Пажитнов изобразил каждый квадратик падающих тетрамино парой квадратных скобок «[]», создав одну из самых знаменитых головоломок в истории.",
+        photo: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #0770E3 0%, #0B0C10 100%)"
+      },
+      {
+        id: 50,
+        rubric: "ОТКРЫВАЯ РОССИЮ",
+        location: "Остров Ратманова · Чукотка",
+        coord: "65°46′N 169°03′W",
+        posterWord: "ЗАВТРА / ВЧЕРА",
+        question: "Почему российский остров Ратманова в Беринговом проливе называют «Островом завтрашнего дня», хотя до соседнего острова США всего 3,8 км?",
+        options: [
+          "Там раньше всех в Арктике заканчивается полярная ночь",
+          "Из-за оптического преломления света во льдах",
+          "На острове работает станция службы точного времени",
+          "Прямо между островами проходит международная Линия перемены дат (разница 21 час)"
+        ],
+        correct: 3,
+        answerTitle: "Прямо между ними проходит международная Линия перемены дат!",
+        answerText: "Самая восточная точка России — остров Ратманова — и американский остров Крузенштерна разделены узким проливом шириной менее четырех километров. Но между ними пролегает граница часовых поясов Земли: когда на российском берегу уже 9 утра вторника, на соседнем острове еще 12 дня понедельника.",
+        photo: "https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?auto=format&fit=crop&w=1200&q=80",
+        gradient: "linear-gradient(135deg, #FF3B30 0%, #0770E3 100%)"
+      }
+    ];
+
+    // Skyscanner Color-Blocking Themes cycled across question pairs
+    const COLOR_BLOCK_THEMES = [
+      {
+        qBg: "#0770E3", qText: "#FFFFFF",
+        aBg: "#0B0C10", aText: "#FFFFFF",
+        cardBg: "#FFFFFF", cardText: "#0B0C10",
+        gridLine: "rgba(255, 255, 255, 0.15)", gridDot: "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        qBg: "#0B0C10", qText: "#FFFFFF",
+        aBg: "#0770E3", aText: "#FFFFFF",
+        cardBg: "#FFFFFF", cardText: "#0B0C10",
+        gridLine: "rgba(255, 255, 255, 0.14)", gridDot: "#0770E3"
+      },
+      {
+        qBg: "#FF3B30", qText: "#FFFFFF",
+        aBg: "#0B0C10", aText: "#FFFFFF",
+        cardBg: "#FFFFFF", cardText: "#0B0C10",
+        gridLine: "rgba(255, 255, 255, 0.18)", gridDot: "#FFFFFF"
+      }
+    ];
+
+    let currentSlide = 0; // 0 to 99 (100 slides)
+    // Stores the user's selected option (0..3) for each of the 50 questions
+    const userSelections = new Array(50).fill(null);
+
+    const rootStyle = document.documentElement.style;
+    const bodyEl = document.body;
+
+    // DOM Elements
+    const partTitleEl = document.getElementById('partTitle');
+    const timingReadoutEl = document.getElementById('timingReadout');
+    const modePillEl = document.getElementById('modePill');
+    const panelQuestionEl = document.getElementById('panelQuestion');
+    const panelRightStageEl = document.getElementById('panelRightStage');
+    const giantWatermarkEl = document.getElementById('giantWatermark');
+    const rubricTagEl = document.getElementById('rubricTag');
+    const qNumberSpecEl = document.getElementById('qNumberSpec');
+    const qKickerSerifEl = document.getElementById('qKickerSerif');
+    const qDisplayTextEl = document.getElementById('qDisplayText');
+    const optionBtns = Array.from(document.querySelectorAll('.option-btn'));
+    const shiftTriggerBtn = document.getElementById('shiftTriggerBtn');
+    const shiftBtnLabel = document.getElementById('shiftBtnLabel');
+    const shiftSpecNoteEl = document.getElementById('shiftSpecNote');
+    const visualFrameBoxEl = document.getElementById('visualFrameBox');
+    const visualCardMaskEl = document.getElementById('visualCardMask');
+    const visualPhotoEl = document.getElementById('visualPhoto');
+    const pinLocationTextEl = document.getElementById('pinLocationText');
+    const coordTagEl = document.getElementById('coordTag');
+    const visualPosterWordEl = document.getElementById('visualPosterWord');
+    const visualRatioSpecEl = document.getElementById('visualRatioSpec');
+    const answerPushContainerEl = document.getElementById('answerPushContainer');
+    const answerBadgePillEl = document.getElementById('answerBadgePill');
+    const answerUserVerdictEl = document.getElementById('answerUserVerdict');
+    const answerSerifSubEl = document.getElementById('answerSerifSub');
+    const answerDisplayHeadlineEl = document.getElementById('answerDisplayHeadline');
+    const answerEditorialBodyEl = document.getElementById('answerEditorialBody');
+    const slideCounterTextEl = document.getElementById('slideCounterText');
+    const progressBarFillEl = document.getElementById('progressBarFill');
+    const questionJumpSelectEl = document.getElementById('questionJumpSelect');
+    const prevSlideBtn = document.getElementById('prevSlideBtn');
+    const nextSlideBtn = document.getElementById('nextSlideBtn');
+
+    function pad2(n) {
+      return n < 10 ? '0' + n : String(n);
+    }
+
+    function initSelectMenu() {
+      questionJumpSelectEl.innerHTML = '';
+      SLIDES_DATA.forEach((item, idx) => {
+        const opt = document.createElement('option');
+        opt.value = String(idx * 2);
+        opt.textContent = `${pad2(item.id)}. [${item.location}] ${item.question.slice(0, 44)}...`;
+        questionJumpSelectEl.appendChild(opt);
+      });
+    }
+
+    function applyThemeColors(qIndex, isAnswer) {
+      const theme = COLOR_BLOCK_THEMES[qIndex % COLOR_BLOCK_THEMES.length];
+      rootStyle.setProperty('--bg-main', isAnswer ? theme.aBg : theme.qBg);
+      rootStyle.setProperty('--text-main', isAnswer ? theme.aText : theme.qText);
+      rootStyle.setProperty('--bg-card', theme.cardBg);
+      rootStyle.setProperty('--text-card', theme.cardText);
+      rootStyle.setProperty('--grid-line', theme.gridLine);
+      rootStyle.setProperty('--grid-dot', theme.gridDot);
+    }
+
+    // Updates the visual state of the 4 option buttons (А, Б, В, Г)
+    function updateOptionsUI(qIndex, isAnswer) {
+      const item = SLIDES_DATA[qIndex];
+      const chosen = userSelections[qIndex];
+
+      optionBtns.forEach((btn, idx) => {
+        const textEl = document.getElementById(`optText${idx}`);
+        const tagEl = document.getElementById(`optTag${idx}`);
+        textEl.textContent = item.options[idx];
+
+        btn.classList.remove('is-selected', 'is-correct', 'is-wrong-selected', 'is-dimmed');
+
+        if (!isAnswer) {
+          if (chosen === idx) {
+            btn.classList.add('is-selected');
+            tagEl.textContent = 'ВЫБРАНО';
+          }
+        } else {
+          if (idx === item.correct) {
+            btn.classList.add('is-correct');
+            tagEl.textContent = chosen === idx ? '✓ ВАШ ОТВЕТ ВЕРЕН' : '✓ ВЕРНЫЙ ОТВЕТ';
+          } else if (chosen === idx) {
+            btn.classList.add('is-wrong-selected');
+            tagEl.textContent = '✗ ВАШ ВЫБОР';
+          } else {
+            btn.classList.add('is-dimmed');
+          }
+        }
+      });
+
+      // Update action hint & answer verdict badge
+      if (!isAnswer) {
+        if (chosen !== null) {
+          shiftBtnLabel.textContent = `ПРОВЕРИТЬ ВАРИАНТ «${LETTERS[chosen]}» (SHIFT)`;
+          shiftSpecNoteEl.textContent = `ВЫБРАН ОТВЕТ ${LETTERS[chosen]} · НАЖМИТЕ SHIFT ИЛИ ПРОБЕЛ`;
+        } else {
+          shiftBtnLabel.textContent = 'ПОКАЗАТЬ ОТВЕТ (SHIFT)';
+          shiftSpecNoteEl.textContent = 'ВЫБЕРИТЕ ВАРИАНТ А / Б / В / Г ИЛИ НАЖМИТЕ SHIFT';
+        }
+      } else {
+        shiftBtnLabel.textContent = currentSlide < 99 ? 'СЛЕДУЮЩИЙ ВОПРОС' : 'К НАЧАЛУ';
+        shiftSpecNoteEl.textContent = `ПРАВИЛЬНЫЙ ВАРИАНТ: ${LETTERS[item.correct]}`;
+
+        if (chosen === null) {
+          answerUserVerdictEl.style.display = 'none';
+        } else if (chosen === item.correct) {
+          answerUserVerdictEl.style.display = 'inline-flex';
+          answerUserVerdictEl.style.background = '#10B981';
+          answerUserVerdictEl.style.color = '#FFFFFF';
+          answerUserVerdictEl.textContent = `✓ ВЫ ОТВЕТИЛИ ВЕРНО (${LETTERS[chosen]})`;
+        } else {
+          answerUserVerdictEl.style.display = 'inline-flex';
+          answerUserVerdictEl.style.background = '#FF3B30';
+          answerUserVerdictEl.style.color = '#FFFFFF';
+          answerUserVerdictEl.textContent = `✗ ВАШ ВЫБОР: ${LETTERS[chosen]}`;
+        }
+      }
+    }
+
+    function populateSlideDOM(qIndex, isAnswer) {
+      const item = SLIDES_DATA[qIndex];
+      const slideHuman = qIndex * 2 + (isAnswer ? 2 : 1);
+
+      bodyEl.setAttribute('data-state', isAnswer ? 'answer' : 'question');
+      applyThemeColors(qIndex, isAnswer);
+
+      partTitleEl.textContent = item.id <= 10
+        ? 'Рубрика I: Мифы & Стереотипы (Слайды 01–20)'
+        : 'Рубрика II: Открывая Россию (Слайды 21–100)';
+
+      timingReadoutEl.textContent = `${pad2(item.id)}.${isAnswer ? '50' : '00'} / 50.00`;
+      modePillEl.textContent = isAnswer ? `ОТВЕТ · ${pad2(slideHuman)}/100` : `ВОПРОС · ${pad2(slideHuman)}/100`;
+
+      giantWatermarkEl.textContent = pad2(item.id);
+      rubricTagEl.textContent = item.rubric;
+      qNumberSpecEl.textContent = `No. ${pad2(item.id)} / 50`;
+      qKickerSerifEl.textContent = item.id <= 10
+        ? 'Стереотип под микроскопом'
+        : `Гео-точка: ${item.location}`;
+      qDisplayTextEl.textContent = item.question;
+
+      updateOptionsUI(qIndex, isAnswer);
+
+      visualCardMaskEl.style.background = item.gradient;
+      if (visualPhotoEl.getAttribute('data-src') !== item.photo) {
+        visualPhotoEl.style.opacity = '1';
+        visualPhotoEl.src = item.photo;
+        visualPhotoEl.setAttribute('data-src', item.photo);
+      }
+
+      pinLocationTextEl.textContent = item.location;
+      coordTagEl.textContent = item.coord;
+      visualPosterWordEl.textContent = item.posterWord;
+      visualRatioSpecEl.textContent = isAnswer ? `SPLIT // ${pad2(slideHuman)}` : `HERO // ${pad2(slideHuman)}`;
+
+      answerBadgePillEl.textContent = `ПРАВИЛЬНЫЙ ОТВЕТ: ${LETTERS[item.correct]}`;
+      answerSerifSubEl.textContent = item.location;
+      answerDisplayHeadlineEl.textContent = item.answerTitle;
+      answerEditorialBodyEl.textContent = item.answerText;
+
+      slideCounterTextEl.innerHTML = `${pad2(slideHuman)} <span>/ 100</span>`;
+      progressBarFillEl.style.width = `${slideHuman}%`;
+      questionJumpSelectEl.value = String(qIndex * 2);
+
+      prevSlideBtn.disabled = currentSlide === 0;
+      nextSlideBtn.disabled = currentSlide === 99;
+      nextSlideBtn.innerHTML = isAnswer ? 'Следующий →' : 'Ответ (Shift) →';
+    }
+
+    // ============================================================================
+    // SKYSCANNER "SHIFT & PUSH" GSAP CHOREOGRAPHY
+    // ============================================================================
+    function animateShiftAndPush(targetSlide, immediate = false) {
+      if (targetSlide < 0 || targetSlide > 99) return;
+
+      const prevQIndex = Math.floor(currentSlide / 2);
+      const nextQIndex = Math.floor(targetSlide / 2);
+      const isAnswer = targetSlide % 2 === 1;
+      const isNewQuestionPair = prevQIndex !== nextQIndex;
+
+      currentSlide = targetSlide;
+      const dur = immediate ? 0 : 0.85;
+
+      // Kill any running tweens so rapid clicking never locks up the presentation
+      gsap.killTweensOf([
+        motionGridEl, panelQuestionEl, panelRightStageEl,
+        visualFrameBoxEl, answerPushContainerEl, visualPhotoEl,
+        '#qDisplayText', '#qKickerSerif', '#optionsGrid', '#visualCardMask',
+        '#giantWatermark', '#answerTopMeta', '#answerDisplayHeadline', '#answerEditorialBody'
+      ]);
+
+      // Shift & Scale background technical grid
+      const gridShiftX = (targetSlide % 5) * -14;
+      const gridShiftY = (targetSlide % 3) * -10;
+      const gridScale = isAnswer ? 1.04 : 1.0;
+
+      gsap.to(motionGridEl, {
+        x: gridShiftX,
+        y: gridShiftY,
+        scale: gridScale,
+        duration: dur,
+        ease: "expo.out"
+      });
+
+      populateSlideDOM(nextQIndex, isAnswer);
+
+      if (isAnswer) {
+        // PUSH Question Panel left to 36% & expand Right Stage to 64%
+        gsap.to(panelQuestionEl, { width: "36%", duration: dur, ease: "expo.out" });
+        gsap.to(panelRightStageEl, { width: "64%", duration: dur, ease: "expo.out" });
+
+        // Compress top visual frame to 42% & PUSH Answer Drawer up to 58%
+        gsap.to(visualFrameBoxEl, {
+          height: "42%",
+          padding: "22px 36px 14px 36px",
+          duration: dur,
+          ease: "expo.out"
+        });
+        gsap.to(answerPushContainerEl, {
+          height: "58%",
+          paddingTop: "28px",
+          paddingBottom: "28px",
+          duration: dur,
+          ease: "expo.out"
+        });
+
+        gsap.fromTo(visualPhotoEl,
+          { scale: 1.18 },
+          { scale: 1.02, duration: dur * 1.1, ease: "expo.out" }
+        );
+
+        // Masked Stagger Reveal inside Answer Drawer
+        gsap.fromTo(
+          ['#answerTopMeta', '#answerDisplayHeadline', '#answerEditorialBody'],
+          { yPercent: 105, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.75,
+            stagger: 0.07,
+            ease: "expo.out",
+            delay: immediate ? 0 : 0.06
+          }
+        );
+      } else {
+        // SHIFT back to Question State (60% / 40% split, full height visual)
+        gsap.to(panelQuestionEl, { width: "60%", duration: dur, ease: "expo.out" });
+        gsap.to(panelRightStageEl, { width: "40%", duration: dur, ease: "expo.out" });
+        gsap.to(visualFrameBoxEl, {
+          height: "100%",
+          padding: "36px",
+          duration: dur,
+          ease: "expo.out"
+        });
+        gsap.to(answerPushContainerEl, {
+          height: "0%",
+          paddingTop: "0px",
+          paddingBottom: "0px",
+          duration: dur,
+          ease: "expo.out"
+        });
+        gsap.to(visualPhotoEl, { scale: 1.08, duration: dur, ease: "expo.out" });
+
+        if (isNewQuestionPair && !immediate) {
+          gsap.fromTo(
+            ['#qKickerSerif', '#qDisplayText', '#optionsGrid'],
+            { y: 26, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.72, stagger: 0.06, ease: "expo.out" }
+          );
+          gsap.fromTo(
+            '#visualCardMask',
+            { scale: 0.94, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.78, ease: "expo.out" }
+          );
+          gsap.fromTo(
+            '#giantWatermark',
+            { yPercent: 25, opacity: 0 },
+            { yPercent: 0, opacity: 0.08, duration: 0.78, ease: "expo.out" }
+          );
+        }
+      }
+    }
+
+    // Clicking an option (А, Б, В, Г) selects it on the Question slide
+    optionBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const isAnswer = currentSlide % 2 === 1;
+        if (isAnswer) return; // Lock selection once answer is revealed
+        const qIndex = Math.floor(currentSlide / 2);
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        userSelections[qIndex] = idx;
+        updateOptionsUI(qIndex, false);
+      });
+    });
+
+    // Controls & Event Listeners
+    prevSlideBtn.addEventListener('click', () => animateShiftAndPush(currentSlide - 1));
+    nextSlideBtn.addEventListener('click', () => animateShiftAndPush(currentSlide + 1));
+
+    shiftTriggerBtn.addEventListener('click', () => {
+      if (currentSlide < 99) {
+        animateShiftAndPush(currentSlide + 1);
+      } else {
+        animateShiftAndPush(0);
+      }
+    });
+
+    questionJumpSelectEl.addEventListener('change', (e) => {
+      const target = parseInt(e.target.value, 10);
+      animateShiftAndPush(target);
+      questionJumpSelectEl.blur();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      // Allow pressing 1, 2, 3, 4 on keyboard to select option А, Б, В, Г
+      if (currentSlide % 2 === 0 && ['1', '2', '3', '4'].includes(e.key)) {
+        const qIndex = Math.floor(currentSlide / 2);
+        userSelections[qIndex] = parseInt(e.key, 10) - 1;
+        updateOptionsUI(qIndex, false);
+        return;
+      }
+
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'Enter') {
+        e.preventDefault();
+        animateShiftAndPush(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        animateShiftAndPush(currentSlide - 1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        animateShiftAndPush(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        animateShiftAndPush(99);
+      }
+    });
+
+    // Boot presentation on Slide 1 (index 0)
+    initSelectMenu();
+    animateShiftAndPush(0, true);
+  </script>
+</body>
+</html>
+
+```
